@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
+import React,{useState} from "react";
 import { useToast } from "@/components/ui/use-toast";
 import Console from "@/components/ui/console";
 import AddAndDisplay from "@/components/ui/addAndDisplay";
 
 const page = () => {
-  const [todos, setTodos] = React.useState<any[]>([]);
-  const [task, setTask] = React.useState<string>("");
+  const [todos, setTodos] = useState<any[]>([]);
+  const [task, setTask] = useState<string>("");
 
   const { toast } = useToast();
 
