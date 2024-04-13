@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Poppins, Fira_Code } from "next/font/google";
+import { Poppins,Fira_Code } from "next/font/google";
 import Nav from "@/components/ui/nav";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 const poppins = Poppins({
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600","700","800"],
   subsets: ["latin"],
   display: "swap",
   style: "normal",
   variable: "--font-poppins",
 });
 const fira = Fira_Code({
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600","700"],
   subsets: ["latin"],
   display: "swap",
   style: "normal",
@@ -40,7 +40,7 @@ export default function RootLayout({
         >
           <Nav />
           {children}
-          <Toaster />
+          <Toaster/>
         </ThemeProvider>
       </body>
     </html>
