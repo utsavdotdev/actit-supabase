@@ -12,8 +12,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Image from "next/image";
-import { redirect } from "next/navigation";
-import { toast } from "./use-toast";
 
 const nav = ({ session }: any) => {
   const supabase = createClient();
