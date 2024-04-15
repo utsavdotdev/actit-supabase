@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Play, Check } from "lucide-react";
 import readUserSession from "@/lib/action";
@@ -13,9 +12,9 @@ export default async function Home() {
   return (
     <>
       <div className="min-h-[calc(100vh-96px)] w-full flex justify-center items-center">
-        <div className="w-4/5 h-fit flex justify-between items-center p-4 gap-16">
-          <div className="w-3/2 sm:w-1/2 h-96 flex flex-col gap-14 justify-center">
-            <div className="text-4xl sm-text-3xl font-fira antialiased font-medium leading-snug tracking-tight">
+        <div className="w-full sm:w-4/5 h-fit flex justify-between items-center p-4 gap-16">
+          <div className="w-full sm:w-1/2 h-96 flex flex-col gap-14 justify-center">
+            <div className="text-2xl text-center sm:text-left sm:text-4xl font-fira antialiased font-medium leading-snug tracking-tight">
               Your{" "}
               <span className="underline decoration-highlight decoration-[2px] decoration-wavy">
                 Cross-platform
@@ -60,7 +59,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <Terminal/>
+          <Terminal />
         </div>
       </div>
     </>

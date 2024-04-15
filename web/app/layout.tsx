@@ -21,8 +21,8 @@ const fira = Fira_Code({
   variable: "--font-fira",
 });
 export const metadata: Metadata = {
-  title: "Ctodo",
-  description: "The Cross Platform Todo App",
+  title: "Actit",
+  description: "The Cross Platform Cli Todo App",
 };
 
 export default async function RootLayout({
