@@ -2,19 +2,19 @@ import fs from "fs";
 import {
   intro,
   outro,
-  confirm,
-  select,
   spinner,
   isCancel,
   cancel,
   text,
   multiselect,
+  note,
 } from "@clack/prompts";
 import color from "picocolors";
-import chalk from "chalk";
+import { getPhrase } from "../utils/phares.js";
 import { setTimeout as sleep } from "node:timers/promises";
 
 const tasksFile = "tasks.json";
+const words = getPhrase();
 let tasks = [];
 
 export const loadTasks = () => {
@@ -56,33 +56,36 @@ export const addTask = async () => {
   const s = spinner();
   s.start("Adding task");
 
-  await sleep(1000);
+  await sleep(500);
 
   s.stop("Task added successfully");
 
-  outro("You're all set!");
+  outro(words);
 };
 
 export const listTasks = (showTime) => {
   console.log();
   if (tasks.length === 0) {
-    console.log(chalk.yellow.bold("No tasks found."));
+    console.log(color.yellow(color.bold("No tasks found.")));
   } else {
-    console.log(chalk.blue.bold("List of tasks:"));
+    intro(color.inverse("actit list"));
     tasks.forEach((task, index) => {
       const status = task.completed
-        ? chalk.green.bold("[✔]")
-        : chalk.red.bold("[ ]");
+        ? color.green(color.bold("[✔]"))
+        : color.red(color.bold("[ ]"));
       let taskInfo = `${index + 1}. ${status} ${task.task}`;
       if (showTime) {
-        taskInfo += chalk.gray(` (Created: ${task.created}`);
+        taskInfo += color.gray(` (Created: ${task.created}`);
         if (task.completed) {
-          taskInfo += chalk.gray(`, Done: ${task.done})`);
+          taskInfo += color.gray(`, Done: ${task.done})`);
         } else {
-          taskInfo += chalk.gray(")");
+          taskInfo += color.gray(")");
         }
       }
-      console.log(taskInfo);
+      note(taskInfo, "Todos", {
+        dim: false,
+      });
+      outro(words);
     });
   }
 };
@@ -92,6 +95,11 @@ export const completeTask = async () => {
   intro(color.inverse("actit done"));
   if (tasks.length === 0) {
     outro("No tasks found.");
+    return;
+  }
+  //if there are no tasks to complete show a message
+  if (tasks.filter((task) => !task.completed).length === 0) {
+    outro("Wow! You've completed all your tasks. Great job!");
     return;
   }
   const task = await multiselect({
@@ -121,11 +129,11 @@ export const completeTask = async () => {
   const s = spinner();
   s.start(`Marking ${task.length} task as completed`);
 
-  await sleep(1000);
+  await sleep(500);
 
   s.stop("Task completed");
 
-  outro("You're all set!");
+  outro(words);
 };
 
 export const deleteTask = async () => {
@@ -161,9 +169,9 @@ export const deleteTask = async () => {
   const s = spinner();
   s.start(`Deleting ${task.length} task `);
 
-  await sleep(1000);
+  await sleep(500);
 
   s.stop("Task deleted");
 
-  outro("You're all set!");
+  outro(words);
 };

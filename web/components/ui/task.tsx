@@ -20,50 +20,74 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "./input";
 import { Label } from "./label";
+import { updateTask, updateTodoById, deleteTodoById } from "@/app/action";
 
-const Task = ({ data, setTodos, toast }: any) => {
-  const { title, completed } = data;
+const Task = ({ data, setTodos, toast,trigger,setTrigger }: any) => {
+  const { task, completed, user_id, id } = data;
+
   const [newTask, setNewTask] = React.useState<string>("");
-  const mark = () => {
-    setTodos((prev: any) =>
-      prev.map((todo: any) => {
-        if (todo.id === data.id) {
-          return {
-            ...todo,
-            completed: !todo.completed,
-          };
-        }
-        return todo;
-      })
-    );
+  const mark = async () => {
+    try { 
+      const res = await updateTodoById(id, !completed);
+      if (!res) {
+        throw Error;
+      }
+      setTrigger(!trigger);
+      toast({
+        title: "Notification",
+        description: "Task updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Notification",
+        description: "Failed to mark todo",
+      });
+    }
   };
 
-  const updateTodo = (id: number, title: string) => {
-    if (!title) {
+  const updateTodo = async (task: string) => {
+    if (!task) {
       toast({
         title: "Notification",
         description: "Task is empty",
       });
       return;
     }
-    setTodos((prev: any) =>
-      prev.map((todo: any) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            title: title,
-          };
-        }
-        return todo;
-      })
-    );
-    toast({
-      title: "Notification",
-      description: "Task updated successfully",
-    });
+
+    try {
+      const res = await updateTask(id, task);
+      if (!res) {
+        throw Error;
+      }
+      setTrigger(!trigger);
+      toast({
+        title: "Notification",
+        description: "Task updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Notification",
+        description: "Failed to update todo",
+      });
+    }
   };
-  const deleteTodo = (id: number) => {
-    setTodos((prev: any) => prev.filter((todo: any) => todo.id !== id));
+  const deleteTodo = async (task_id: number) => {
+    try {
+      const res = await deleteTodoById(task_id);
+      if (!res) {
+        throw Error;
+      }
+      setTrigger(!trigger);
+      toast({
+        title: "Notification",
+        description: "Task deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Notification",
+        description: "Failed to delete todo",
+      });
+    }
   };
   return (
     <>
@@ -93,7 +117,7 @@ const Task = ({ data, setTodos, toast }: any) => {
                 : "truncate overflow-hidden text-pretty text-xl font-medium dark:text-neutral-200"
             }
           >
-            {title}
+            {task}
           </p>
         </div>
         <div className="flex items-center gap-0">
@@ -129,7 +153,7 @@ const Task = ({ data, setTodos, toast }: any) => {
                   <Button
                     type="submit"
                     variant="secondary"
-                    onClick={() => updateTodo(data.id, newTask)}
+                    onClick={() => updateTodo(newTask)}
                   >
                     Update
                   </Button>
@@ -145,7 +169,7 @@ const Task = ({ data, setTodos, toast }: any) => {
             <Trash
               className="h-6 w-6"
               strokeWidth={"1.25px"}
-              onClick={() => deleteTodo(data.id)}
+              onClick={() => deleteTodo(id)}
             />
           </Button>
         </div>

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import { Github, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,10 +11,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Image from "next/image";
+import { useAppContext } from "@/utils/Context";
 
 const nav = ({ session }: any) => {
   const supabase = createClient();
-  const [user, setUser] = useState({} as any);
+  const {user,setUser} = useAppContext();
   const loginWithGithub = async () => {
     await supabase.auth.signInWithOAuth({
       provider: "github",
@@ -25,14 +25,6 @@ const nav = ({ session }: any) => {
     });
   };
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const getUser = async () => {
-    const { data } = await supabase.auth.getUser();
-    setUser(data.user?.user_metadata);
-  };
 
   const logout = async () => {
     await supabase.auth.signOut();

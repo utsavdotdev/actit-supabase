@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import TodoSection from "@/components/ui/TodoSection";
 
 export default async function Page() {
-
+   
   const { data } = await readUserSession();
   if (!data.session) {
     redirect("/");

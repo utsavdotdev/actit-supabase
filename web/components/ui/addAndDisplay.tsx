@@ -11,7 +11,21 @@ const AddAndDisplay = ({
   todos,
   setTodos,
   toast,
+  trigger,
+  setTrigger
 }: any) => {
+
+  //sort the complted task to the bottom
+  todos.sort((a: any, b: any) => {
+    if (a.completed === b.completed) {
+      return 0;
+    }
+    if (a.completed) {
+      return 1;
+    }
+    return -1;
+  });
+  
   return (
     <>
       <form onSubmit={submit}>
@@ -38,6 +52,8 @@ const AddAndDisplay = ({
             data={todo}
             setTodos={setTodos}
             toast={toast}
+            trigger={trigger}
+            setTrigger={setTrigger}
           />
         ))}
       </div>

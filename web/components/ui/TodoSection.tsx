@@ -1,32 +1,54 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import AddAndDisplay from "@/components/ui/addAndDisplay";
 import Console from "@/components/ui/console";
-
+import { createTodo, readTodos } from "@/app/action";
 
 const TodoSection = () => {
-     const [todos, setTodos] = useState<any[]>([]);
-     const [task, setTask] = useState<string>("");
+  const [todos, setTodos] = useState<any[]>([]);
+  const [task, setTask] = useState<string>("");
+  const [trigger,setTrigger] = useState<boolean>(false);
 
-     const { toast } = useToast();
+  const { toast } = useToast();
 
-     const submit = (e: any) => {
-       e.preventDefault();
-       setTodos([
-         ...todos,
-         {
-           id: todos.length + 1,
-           title: task,
-           completed: false,
-         },
-       ]);
-       setTask("");
-       toast({
-         title: "Notification",
-         description: "Task added successfully",
-       });
-     };
+  useEffect(() => {
+    fetchTodos();
+  }, [trigger]);
+
+  const fetchTodos = async () => {
+    try {
+      const { data } = await readTodos();
+      if (data) {
+        setTodos(data);
+      }
+    } catch (error) {
+      toast({
+        title: "Notification",
+        description: "Failed to fetch todos",
+      });
+    }
+  };
+  const submit = async (e: any) => {
+    try {
+      e.preventDefault();
+      const res = await createTodo(task);
+      if (res) {
+        setTask("");
+        setTrigger(!trigger);
+        toast({
+          title: "Notification",
+          description: "Task added successfully",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Notification",
+        description: "Failed to add task",
+      });
+    }
+  };
 
   return (
     <>
@@ -52,6 +74,8 @@ const TodoSection = () => {
         todos={todos}
         setTodos={setTodos}
         toast={toast}
+        trigger={trigger}
+        setTrigger={setTrigger}
       />
     </>
   );
