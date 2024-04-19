@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -13,8 +13,50 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronRight, Copy } from "lucide-react";
-
+import { v4 as uuidv4 } from "uuid";
+import { saveApiKey, getApiKey } from "@/app/action";
+import { toast } from "./use-toast";
 const Console = () => {
+  const [key, setKey] = useState<string>("");
+
+  useEffect(() => {
+    fetchKey();
+  }, []);
+
+  const fetchKey = async () => {
+    try{
+      const key = await getApiKey();
+      if(!key){
+        return;
+      }
+      setKey(key);
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+
+  const onGenerate = async () => {
+    try {
+      const key = uuidv4();
+      const res = await saveApiKey(key);
+      if (!res) {
+        throw Error;
+      }
+      setKey(key);
+      toast({
+        title: "Notification",
+        description: "Api Key generated successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Notification",
+        description: "Failed to generate Api Key",
+      });
+    }
+  };
   return (
     <>
       <Dialog>
@@ -40,7 +82,7 @@ const Console = () => {
               <Label htmlFor="link" className="sr-only">
                 Api Key
               </Label>
-              <Input id="link" defaultValue="Api-Key-1234567890" readOnly />
+              <Input id="link" defaultValue={key} readOnly />
             </div>
             <Button type="submit" size="sm" className="px-3">
               <span className="sr-only">Copy</span>
@@ -48,10 +90,10 @@ const Console = () => {
             </Button>
           </div>
           <DialogFooter className="sm:justify-start">
+            <Button type="button" variant="default" onClick={onGenerate}>
+              Generate
+            </Button>
             <DialogClose className="flex gap-2">
-              <Button type="button" variant="default">
-                Docs
-              </Button>
               <Button type="button" variant="secondary">
                 Close
               </Button>

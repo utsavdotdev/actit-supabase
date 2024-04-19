@@ -190,4 +190,20 @@ export const login = async () => {
     cancel("Operation cancelled");
     return process.exit(0);
   }
+
+  const res = await fetch(`http://localhost:3000/api/auth/${apiKey}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (res.status === 404) {
+    cancel("Invalid API key");
+    return process.exit(0);
+  }
+
+  const user = await res.json();
+  fs.writeFileSync("user.json", JSON.stringify(user, null, 2));
+
+  outro("Happy tasking!");
 };

@@ -2,7 +2,7 @@
   "name": "actit-supabase",
   "version": "0.1.0",
   "private": true,
-  "license":"MIT",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -19,6 +19,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.42.3",
+    "@types/uuid": "^9.0.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.368.0",
@@ -28,7 +29,8 @@
     "react-dom": "^18",
     "react-type-animation": "^3.2.0",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "typescript": "^5",
