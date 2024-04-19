@@ -69,6 +69,7 @@ export const listTasks = (showTime) => {
     console.log(color.yellow(color.bold("No tasks found.")));
   } else {
     intro(color.inverse("actit list"));
+    let tasksList = [];
     tasks.forEach((task, index) => {
       const status = task.completed
         ? color.green(color.bold("[✔]"))
@@ -82,11 +83,12 @@ export const listTasks = (showTime) => {
           taskInfo += color.gray(")");
         }
       }
-      note(taskInfo, "Todos", {
-        dim: false,
-      });
-      outro(words);
+      tasksList.push(taskInfo);
     });
+    note(tasksList.join("\n"), "Todos", {
+      dim: false,
+    });
+    outro(words);
   }
 };
 
@@ -174,4 +176,18 @@ export const deleteTask = async () => {
   s.stop("Task deleted");
 
   outro(words);
+};
+
+export const login = async () => {
+  console.log();
+  intro(color.inverse("actit login"));
+  const apiKey = await text({
+    message: "Enter the your Api key",
+    placeholder: "ctodo-api-key",
+  });
+
+  if (isCancel(apiKey)) {
+    cancel("Operation cancelled");
+    return process.exit(0);
+  }
 };

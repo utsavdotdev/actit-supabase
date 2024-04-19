@@ -5,7 +5,9 @@ import {
   listTasks,
   completeTask,
   deleteTask,
+  login,
 } from "./utils/function.js";
+import "dotenv/config";
 
 loadTasks();
 
@@ -36,6 +38,13 @@ program
   .description("Delete a task")
   .action(() => {
     deleteTask();
+  });
+
+program
+  .command("login")
+  .description("Login to the cli")
+  .action(() => {
+    login();
   });
 
 program.parse(process.argv);
