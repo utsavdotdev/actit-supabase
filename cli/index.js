@@ -6,6 +6,7 @@ import {
   completeTask,
   deleteTask,
   login,
+  syncTodo,
 } from "./utils/function.js";
 import "dotenv/config";
 
@@ -45,6 +46,13 @@ program
   .description("Login to the cli")
   .action(() => {
     login();
+  });
+
+program
+  .command("sync")
+  .description("Sync tasks with the server")
+  .action(() => {
+    syncTodo();
   });
 
 program.parse(process.argv);

@@ -130,3 +130,127 @@ export const consoleLogin = async (key: string) => {
 
   return JSON.stringify(user_data);
 };
+
+export const checkApi = async (key: string) => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("api_key", key)
+    .single();
+  if (data === null) {
+    return 404;
+  }
+  return JSON.stringify(data);
+};
+
+export const syncTasks = async (body: any) => {
+  const supabase = await createClient();
+  const { user, tasks } = body;
+  const { data: todos, error }: any = await supabase
+    .from("todos")
+    .select("*")
+    .eq("user_id", user.user_id);
+  if (error) {
+    return false;
+  }
+
+  if (todos.length === 0) {
+    const newTasksWithFields = tasks.map((task: any) => {
+      return {
+        task: task.task,
+        createdAt: task.createdAt,
+        completed: task.completed,
+        doneAt: task.doneAt,
+        user_id: user.user_id,
+      };
+    });
+
+    newTasksWithFields.forEach(async (task: any) => {
+      await supabase.from("todos").insert(task);
+    });
+
+    const { data: newTodos, error: newError }: any = await supabase
+      .from("todos")
+      .select("*")
+      .eq("user_id", user.user_id);
+
+    if (newError) {
+      return false;
+    }
+
+    return JSON.stringify(newTodos);
+  }
+
+  //delete the repeated task
+  let newTasks:any = [];
+  
+  newTasks = tasks.filter((task: any) => {
+    let repeated = false;
+    todos.forEach((todo: any) => {
+      if (task.task === todo.task) {
+        repeated = true;
+      }
+    });
+    if (!repeated) {
+      return task;
+    }
+  });
+
+  console.log(newTasks)
+   if (newTasks.length === 0) {
+    return 202;
+  }
+
+  const newTasksWithFields = newTasks.map((task: any) => {
+    return {
+      task: task.task,
+      createdAt: task.createdAt,
+      completed: task.completed,
+      doneAt: task.doneAt,
+      user_id: user.user_id,
+    };
+  });
+
+  newTasksWithFields.forEach(async (task: any) => {
+    await supabase.from("todos").insert(task);
+  });
+
+  const { data: newTodos, error: newError }: any = await supabase
+    .from("todos")
+    .select("*")
+    .eq("user_id", user.user_id);
+
+  if (newError) {
+    return false;
+  }
+
+  const resBody = {
+    tasks: newTodos,
+    syncCount: newTasks.length,
+  };
+
+  return JSON.stringify(resBody);
+};
+
+export const updateSync = async (key: string) => {
+  const supabase = await createClient();
+  const time = new Date().toLocaleString();
+  console.log(time);
+  const { data, error } = await supabase
+    .from("users")
+    .update({ cli: true, syncAt: time })
+    .eq("api_key", key);
+
+  //return the updated user
+  const { data: user_data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("api_key", key)
+    .single();
+
+  if (error) {
+    return false;
+  }
+  return JSON.stringify(user_data);
+};

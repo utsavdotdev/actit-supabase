@@ -12,6 +12,7 @@ import {
 import color from "picocolors";
 import { getPhrase } from "../utils/phares.js";
 import { setTimeout as sleep } from "node:timers/promises";
+import axios, { all } from "axios";
 
 const tasksFile = "tasks.json";
 const words = getPhrase();
@@ -46,8 +47,8 @@ export const addTask = async () => {
   const newTask = {
     task: taskDescription,
     completed: false,
-    created: new Date().toLocaleString(),
-    done: null,
+    createdAt: new Date().toLocaleString(),
+    doneAt: null,
   };
 
   tasks.push(newTask);
@@ -71,14 +72,14 @@ export const listTasks = (showTime) => {
     intro(color.inverse("actit list"));
     let tasksList = [];
     tasks.forEach((task, index) => {
-      const status = task.completed
+      const status = task.completedAt
         ? color.green(color.bold("[✔]"))
         : color.red(color.bold("[ ]"));
       let taskInfo = `${index + 1}. ${status} ${task.task}`;
       if (showTime) {
-        taskInfo += color.gray(` (Created: ${task.created}`);
-        if (task.completed) {
-          taskInfo += color.gray(`, Done: ${task.done})`);
+        taskInfo += color.gray(` (Created: ${task.createdAt}`);
+        if (task.completedAt) {
+          taskInfo += color.gray(`, Done: ${task.doneAt})`);
         } else {
           taskInfo += color.gray(")");
         }
@@ -100,14 +101,14 @@ export const completeTask = async () => {
     return;
   }
   //if there are no tasks to complete show a message
-  if (tasks.filter((task) => !task.completed).length === 0) {
+  if (tasks.filter((task) => !task.completedAt).length === 0) {
     outro("Wow! You've completed all your tasks. Great job!");
     return;
   }
   const task = await multiselect({
     message: "Select a task to mark as done",
     options: tasks
-      .filter((task) => !task.completed)
+      .filter((task) => !task.completedAt)
       .map((task, index) => ({ label: task.task, value: index })),
   });
 
@@ -122,8 +123,8 @@ export const completeTask = async () => {
   }
 
   task.forEach((index) => {
-    tasks[index].completed = true;
-    tasks[index].done = new Date().toLocaleString();
+    tasks[index].completedAt = true;
+    tasks[index].doneAt = new Date().toLocaleString();
   });
 
   saveTasks();
@@ -181,6 +182,15 @@ export const deleteTask = async () => {
 export const login = async () => {
   console.log();
   intro(color.inverse("actit login"));
+  try {
+    const userFile = fs.readFileSync("user.json");
+    if (userFile.byteLength !== 0) {
+      outro("You are already logged in");
+      return;
+    }
+  } catch (err) {
+    //do nothing
+  }
   const apiKey = await text({
     message: "Enter the your Api key",
     placeholder: "ctodo-api-key",
@@ -203,7 +213,67 @@ export const login = async () => {
   }
 
   const user = await res.json();
-  fs.writeFileSync("user.json", JSON.stringify(user, null, 2));
+  const userData = JSON.stringify(user, null, 2);
+  fs.writeFileSync("user.json", userData);
 
+  //show the login message
+  note("Login Successfull", "Success");
+
+  outro("Happy tasking!");
+};
+
+export const syncTodo = async () => {
+  console.log();
+  intro(color.inverse("actit sync"));
+  const userFile = fs.readFileSync("user.json");
+  const taskFile = fs.readFileSync("tasks.json");
+
+  if (userFile.byteLength === 0) {
+    cancel("You are not logged in");
+    return;
+  }
+  if (taskFile.byteLength === 0) {
+    cancel("No tasks found.");
+    return;
+  }
+  const user = JSON.parse(fs.readFileSync("user.json"));
+  const tasks = JSON.parse(fs.readFileSync("tasks.json"));
+
+  const body = {
+    user: user,
+    tasks: tasks,
+  };
+  const res = await axios(`http://localhost:3000/api/todo/${user.api_key}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: body,
+  });
+
+  if (res.status === 404) {
+    cancel("Invalid API key");
+    return process.exit(0);
+  }
+
+  if (res.status === 500) {
+    cancel("Internal server error");
+    return process.exit(0);
+  }
+
+  if (res.status === 202) {
+    note(`No Task to sync with server`, "Message");
+    outro("Happy tasking!");
+    return;
+  }
+
+  const { usr, allTasks } = res.data;
+  const parsedTasks = JSON.parse(allTasks);
+  const count = parsedTasks.syncCount;
+  fs.writeFileSync("user.json", "");
+  fs.writeFileSync("tasks.json", "");
+  fs.writeFileSync("user.json", usr);
+  fs.writeFileSync("tasks.json", JSON.stringify(parsedTasks.tasks, null, 2));
+  note(`Synced ${count} tasks with the server`, "Message");
   outro("Happy tasking!");
 };

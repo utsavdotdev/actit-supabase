@@ -1,26 +1,20 @@
 [
   {
-    "task": "Buy a items",
-    "completed": true,
-    "created": "4/18/2024, 2:43:48 PM",
-    "done": "4/18/2024, 2:44:15 PM"
+    "id": 91,
+    "created_at": "2024-04-21T07:10:50.688428+00:00",
+    "user_id": "0ecff5c7-8d46-4e5c-ad5a-b3f57cb64f8a",
+    "completed": false,
+    "createdAt": "4/21/2024, 12:51:08 PM",
+    "doneAt": null,
+    "task": "Client side Task"
   },
   {
-    "task": "hello",
+    "id": 96,
+    "created_at": "2024-04-21T07:18:03.791383+00:00",
+    "user_id": "0ecff5c7-8d46-4e5c-ad5a-b3f57cb64f8a",
     "completed": false,
-    "created": "4/18/2024, 8:13:59 PM",
-    "done": null
-  },
-  {
-    "task": "Go to Mall",
-    "completed": false,
-    "created": "4/19/2024, 9:51:29 AM",
-    "done": null
-  },
-  {
-    "task": "HI",
-    "completed": false,
-    "created": "4/20/2024, 12:04:41 AM",
-    "done": null
+    "createdAt": "4/21/2024, 12:51:08 PM",
+    "doneAt": null,
+    "task": "Cli side Task"
   }
 ]
