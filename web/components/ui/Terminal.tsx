@@ -7,7 +7,7 @@ import { Button } from "./button";
 
 const Terminal = () => {
   const [copy, setCopy] = useState(false);
-  const cmd = "npm i -g actit";
+  const cmd = "npm i -g actit-cli";
   const onCopy = () => {
     navigator.clipboard.writeText(cmd);
     setCopy(true);

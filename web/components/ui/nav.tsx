@@ -17,6 +17,7 @@ const nav = ({ session }: any) => {
   const supabase = createClient();
   const {user,setUser} = useAppContext();
   const loginWithGithub = async () => {
+    //get the current 
     await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {

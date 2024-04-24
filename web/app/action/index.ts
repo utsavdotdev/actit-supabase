@@ -179,7 +179,12 @@ export const syncTasks = async (body: any) => {
       return false;
     }
 
-    return JSON.stringify(newTodos);
+    const resBody = {
+      tasks: newTodos,
+      syncCount: tasks.length,
+    };
+
+    return JSON.stringify(resBody);
   }
 
   //delete the repeated task

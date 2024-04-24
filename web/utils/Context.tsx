@@ -15,9 +15,6 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     const { data } = await supabase.auth.getUser();
     setUser(data.user?.user_metadata);
   };
-
-//   console.log(user);
-
   return (
     <AppContext.Provider value={{ user, setUser }}>
       {children}

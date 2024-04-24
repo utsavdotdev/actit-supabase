@@ -1,20 +1,28 @@
 [
   {
-    "id": 91,
-    "created_at": "2024-04-21T07:10:50.688428+00:00",
-    "user_id": "0ecff5c7-8d46-4e5c-ad5a-b3f57cb64f8a",
+    "task": "Go to Gym",
     "completed": false,
-    "createdAt": "4/21/2024, 12:51:08 PM",
-    "doneAt": null,
-    "task": "Client side Task"
+    "createdAt": "4/21/2024, 10:56:51 PM",
+    "doneAt": "4/21/2024, 11:00:10 PM",
+    "completedAt": true
   },
   {
-    "id": 96,
-    "created_at": "2024-04-21T07:18:03.791383+00:00",
-    "user_id": "0ecff5c7-8d46-4e5c-ad5a-b3f57cb64f8a",
+    "task": "Buy a Keyboard",
     "completed": false,
-    "createdAt": "4/21/2024, 12:51:08 PM",
-    "doneAt": null,
-    "task": "Cli side Task"
+    "createdAt": "4/21/2024, 10:57:48 PM",
+    "doneAt": null
+  },
+  {
+    "task": "Do side projects",
+    "completed": false,
+    "createdAt": "4/21/2024, 10:58:01 PM",
+    "doneAt": "4/21/2024, 11:00:10 PM",
+    "completedAt": true
+  },
+  {
+    "task": "Buy vegies",
+    "completed": false,
+    "createdAt": "4/21/2024, 10:59:39 PM",
+    "doneAt": null
   }
 ]
